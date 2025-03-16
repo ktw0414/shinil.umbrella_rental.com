@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>양심우산 대여 시스템</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            margin: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .message {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>양심우산 대여 시스템</h2>
+        <form id="rentalForm">
+            <input type="text" id="studentId" placeholder="학번" required>
+            <input type="text" id="studentName" placeholder="이름" required>
+            <button type="submit">대여하기</button>
+        </form>
+        
+        <div id="confirmationMessage" class="message">대여가 완료되었습니다!</div>
+        
+        <h3>대여 목록</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>학번</th>
+                    <th>이름</th>
+                    <th>반납</th>
+                </tr>
+            </thead>
+            <tbody id="rentalList"></tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentId = urlParams.get('id');
+            const studentName = urlParams.get('name');
+            
+            if (studentId && studentName) {
+                document.getElementById('studentId').value = studentId;
+                document.getElementById('studentName').value = studentName;
+            }
+        });
+
+        document.getElementById('rentalForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let studentId = document.getElementById('studentId').value;
+            let studentName = document.getElementById('studentName').value;
+            
+            let table = document.getElementById('rentalList');
+            let row = table.insertRow();
+            row.insertCell(0).innerText = studentId;
+            row.insertCell(1).innerText = studentName;
+            let returnCell = row.insertCell(2);
+            let returnButton = document.createElement('button');
+            returnButton.innerText = '반납';
+            returnButton.onclick = function() { table.deleteRow(row.rowIndex - 1); };
+            returnCell.appendChild(returnButton);
+
+            document.getElementById('confirmationMessage').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('confirmationMessage').style.display = 'none';
+            }, 3000);
+            
+            document.getElementById('rentalForm').reset();
+        });
+    </script>
+</body>
+</html>
